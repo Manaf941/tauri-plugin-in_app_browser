@@ -49,7 +49,7 @@ browser.addEventListener("close", () => {
 await browser.close()
 
 // Android
-const browser = await open_chrome({
+await open_chrome({
     // See guest-js/index.ts for available options
     url: "https://google.com"
 })
@@ -61,3 +61,9 @@ const browser = await open_chrome({
 # Design Choices
 1. I've chosen to not make platform-agnostic code to have full control over desired styling and behavior.
 2. I needed to use `SFSafariViewController` to use Apple Pay through a dynamic merchant (Not available through PassKit). As such, I did not implement `WKWebView`. You can probably already do this with Tauri already though
+3. Unfortunately, Android doesn't allow closing a Chrome Custom Tabs. As such, there's no `browser.close` feature. You can't even know if a tab has been closed. You should use Activities and Deep Linking to know if a tab has been closed. If it is that much critical to your process, you should probably use an `iframe` or a webview.
+
+# Contact
+In case of questions, contact me on my socials:
+Discord: @manaf941
+Twitter: manaaaaaaaf
