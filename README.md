@@ -2,6 +2,9 @@
 > [!CAUTION]
 > This was a plugin primarily made for myself. I've made it open-source so that other people could use it, but I'm not willing to document everything. If you do need some help / clarification / changes, you can contact me on Discord / Twitter: `manaf941` / `manaaaaaaaf`
 
+# Demo
+https://github.com/user-attachments/assets/7742fe67-55dd-46b5-9b74-e7b8058421a9
+
 # Usage
 ## `src-tauri/src/lib.rs`
 ```rs
