@@ -59,7 +59,7 @@ await open_chrome({
 ```
 
 > [!WARNING]
-> On iOS, if you set `modalPresentationStyle` to `fullScreen`, your application might get paused. Any timeout to browser.call won't be ran.
+> On iOS, if you set `modalPresentationStyle` to `fullScreen`, your application might get paused. Any timeout to browser.close won't be ran.
 
 # Design Choices
 1. I've chosen to not make platform-agnostic code to have full control over desired styling and behavior.
