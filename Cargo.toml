@@ -1,7 +1,7 @@
 [package]
 name = "tauri-plugin-in-app-browser"
 version = "1.0.0"
-authors = [ "You" ]
+authors = [ "Manaf941" ]
 description = ""
 edition = "2021"
 rust-version = "1.77.2"
