@@ -35,6 +35,16 @@ impl<R: Runtime> InAppBrowser<R> {
       .map_err(Into::into);
   }
 
+  pub fn close_safari(&self, payload: CloseSafariRequest) -> crate::Result<CloseSafariResponse> {
+    #[cfg(target_os = "android")]
+    return Err(crate::Error::UnsupportedPlatformError);
+    #[cfg(target_os = "ios")]
+    return self
+      .0
+      .run_mobile_plugin("close_safari", payload)
+      .map_err(Into::into);
+  }
+
   pub fn open_chrome(&self, payload: OpenChromeRequest) -> crate::Result<OpenChromeResponse> {
     #[cfg(target_os = "ios")]
     return Err(crate::Error::UnsupportedPlatformError);

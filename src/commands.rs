@@ -19,3 +19,11 @@ pub(crate) async fn open_chrome<R: Runtime>(
 ) -> Result<OpenChromeResponse> {
     app.in_app_browser().open_chrome(payload)
 }
+
+#[command]
+pub(crate) async fn close_safari<R: Runtime>(
+    app: AppHandle<R>,
+    payload: CloseSafariRequest,
+) -> Result<CloseSafariResponse> {
+    app.in_app_browser().close_safari(payload)
+}

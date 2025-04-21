@@ -2073,16 +2073,40 @@
           "markdownDescription": "Denies the unminimize command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-open-safari`",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-open-safari`\n- `allow-close-safari`\n- `allow-open-chrome`",
           "type": "string",
           "const": "in-app-browser:default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-open-safari`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-open-safari`\n- `allow-close-safari`\n- `allow-open-chrome`"
+        },
+        {
+          "description": "Enables the close_safari command without any pre-configured scope.",
+          "type": "string",
+          "const": "in-app-browser:allow-close-safari",
+          "markdownDescription": "Enables the close_safari command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the open_chrome command without any pre-configured scope.",
+          "type": "string",
+          "const": "in-app-browser:allow-open-chrome",
+          "markdownDescription": "Enables the open_chrome command without any pre-configured scope."
         },
         {
           "description": "Enables the open_safari command without any pre-configured scope.",
           "type": "string",
           "const": "in-app-browser:allow-open-safari",
           "markdownDescription": "Enables the open_safari command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the close_safari command without any pre-configured scope.",
+          "type": "string",
+          "const": "in-app-browser:deny-close-safari",
+          "markdownDescription": "Denies the close_safari command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the open_chrome command without any pre-configured scope.",
+          "type": "string",
+          "const": "in-app-browser:deny-open-chrome",
+          "markdownDescription": "Denies the open_chrome command without any pre-configured scope."
         },
         {
           "description": "Denies the open_safari command without any pre-configured scope.",

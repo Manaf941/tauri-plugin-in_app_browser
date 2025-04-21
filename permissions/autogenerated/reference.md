@@ -5,6 +5,7 @@ Default permissions for the plugin
 #### This default permission set includes the following:
 
 - `allow-open-safari`
+- `allow-close-safari`
 - `allow-open-chrome`
 
 ## Permission Table
@@ -15,6 +16,32 @@ Default permissions for the plugin
 <th>Description</th>
 </tr>
 
+
+<tr>
+<td>
+
+`in-app-browser:allow-close-safari`
+
+</td>
+<td>
+
+Enables the close_safari command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`in-app-browser:deny-close-safari`
+
+</td>
+<td>
+
+Denies the close_safari command without any pre-configured scope.
+
+</td>
+</tr>
 
 <tr>
 <td>

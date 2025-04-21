@@ -1,6 +1,6 @@
 <script>
   import Greet from './lib/Greet.svelte'
-  import { open_safari, open_chrome } from 'tauri-plugin-in-app-browser-api'
+  import { open_safari, close_safari, open_chrome } from 'tauri-plugin-in-app-browser-api'
 
 	let response = ''
 
@@ -8,12 +8,19 @@
 		response += `[${new Date().toLocaleTimeString()}] ` + (typeof returnValue === 'string' ? returnValue : JSON.stringify(returnValue)) + '<br>'
 	}
 
-  function open_safari_browser() {
-    open_safari({
+  async function open_safari_browser() {
+    const browser = await open_safari({
       url: "https://google.com",
     })
-      .then(updateResponse)
       .catch(updateResponse)
+    
+    if (!browser) return
+
+    setTimeout(() => {
+      close_safari(browser)
+        .then(updateResponse)
+        .catch(updateResponse)
+    }, 3000)
   }
 
   function open_chrome_browser() {
@@ -40,20 +47,21 @@
     </a>
   </div>
 
-  <p>
-    Click on the Tauri, Vite, and Svelte logos to learn more.
-  </p>
+  <p>Click on the Tauri, Vite, and Svelte logos to learn more.</p>
 
   <div class="row">
     <Greet />
   </div>
 
   <div>
-    <button on:click="{open_safari_browser}">Open Google.com (SFSafariViewController)</button>
-    <button on:click="{open_chrome_browser}">Open Google.com (Chrome Custom Tabs)</button>
+    <button on:click={open_safari_browser}
+      >Open Google.com (SFSafariViewController)</button
+    >
+    <button on:click={open_chrome_browser}
+      >Open Google.com (Chrome Custom Tabs)</button
+    >
     <div>{@html response}</div>
   </div>
-
 </main>
 
 <style>

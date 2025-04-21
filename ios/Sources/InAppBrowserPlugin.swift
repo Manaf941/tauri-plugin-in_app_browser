@@ -15,7 +15,33 @@ class OpenSafariArgs: Decodable {
     let modalPresentationCapturesStatusBarAppearance: Bool?
 }
 
+class CloseSafariArgs: Decodable {
+    let id: Int
+}
+
+class SafariDelegate: NSObject, SFSafariViewControllerDelegate {
+    weak var plugin: InAppBrowserPlugin?
+    let safariId: Int
+
+    init(plugin: InAppBrowserPlugin, safariId: Int) {
+        self.plugin = plugin
+        self.safariId = safariId
+    }
+
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        plugin?.removeSafariController(for: safariId)
+    }
+}
+
 class InAppBrowserPlugin: Plugin {
+    private var safariControllers: [Int: (controller: SFSafariViewController, delegate: SafariDelegate)] = [:]
+    private var safariIdCounter: Int = 0
+
+    // Helper to remove controller from map
+    func removeSafariController(for id: Int) {
+        safariControllers[id] = nil
+    }
+
     @objc public func open_safari(_ invoke: Invoke) throws {
         let args = try invoke.parseArgs(OpenSafariArgs.self)
 
@@ -32,7 +58,7 @@ class InAppBrowserPlugin: Plugin {
 
         // preferredControlTintColor
         if let colorHex = args.preferredControlTintColor {
-            if let color = UIColor(hexString: colorHex) {
+            if let color = UIColor(hex: colorHex) {
                 safariViewController.preferredControlTintColor = color
             } else {
                 invoke.reject("Unknown preferredControlTintColor: \(colorHex)")
@@ -44,7 +70,7 @@ class InAppBrowserPlugin: Plugin {
 
         // preferredBarTintColor
         if let barColorHex = args.preferredBarTintColor {
-            if let barColor = UIColor(hexString: barColorHex) {
+            if let barColor = UIColor(hex: barColorHex) {
                 safariViewController.preferredBarTintColor = barColor
             } else {
                 invoke.reject("Unknown preferredBarTintColor: \(barColorHex)")
@@ -81,6 +107,13 @@ class InAppBrowserPlugin: Plugin {
             safariViewController.modalPresentationCapturesStatusBarAppearance = true
         }
 
+        // Assign delegate and store in map with id
+        safariIdCounter += 1
+        let safariId = safariIdCounter
+        let delegate = SafariDelegate(plugin: self, safariId: safariId)
+        safariViewController.delegate = delegate
+        safariControllers[safariId] = (controller: safariViewController, delegate: delegate)
+
         DispatchQueue.main.async {
             guard let viewController = UIApplication.shared.keyWindow?.rootViewController else {
                 invoke.reject("No view controller found")
@@ -88,9 +121,22 @@ class InAppBrowserPlugin: Plugin {
             }
 
             viewController.present(safariViewController, animated: true, completion: nil)
-            invoke.resolve([:])
+            invoke.resolve(["id": safariId])
         }
+    }
 
+    @objc public func close_safari(_ invoke: Invoke) throws {
+        let args = try invoke.parseArgs(CloseSafariArgs.self)
+        guard let (controller, _) = safariControllers[args.id] else {
+            invoke.reject("No SafariViewController found for id \(args.id)")
+            return
+        }
+        DispatchQueue.main.async {
+            controller.dismiss(animated: true) {
+                self.removeSafariController(for: args.id)
+                invoke.resolve([:])
+            }
+        }
     }
 }
 
@@ -124,4 +170,33 @@ func UIModalTransitionStyleFromString(_ string: String) -> UIModalTransitionStyl
 @_cdecl("init_plugin_in_app_browser")
 func initPlugin() -> Plugin {
     return InAppBrowserPlugin()
+}
+
+// https://www.hackingwithswift.com/example-code/uicolor/how-to-convert-a-hex-color-to-a-uicolor
+extension UIColor {
+    public convenience init?(hex: String) {
+        let r, g, b, a: CGFloat
+
+        if hex.hasPrefix("#") {
+            let start = hex.index(hex.startIndex, offsetBy: 1)
+            let hexColor = String(hex[start...])
+
+            if hexColor.count == 8 {
+                let scanner = Scanner(string: hexColor)
+                var hexNumber: UInt64 = 0
+
+                if scanner.scanHexInt64(&hexNumber) {
+                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
+                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
+                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
+                    a = CGFloat(hexNumber & 0x000000ff) / 255
+
+                    self.init(red: r, green: g, blue: b, alpha: a)
+                    return
+                }
+            }
+        }
+
+        return nil
+    }
 }

@@ -18,6 +18,11 @@ impl<R: Runtime> InAppBrowser<R> {
     Err(crate::Error::UnsupportedPlatformError)
     // Ok(OpenSafariResponse {})
   }
+
+  pub fn close_safari(&self, _payload: CloseSafariRequest) -> crate::Result<CloseSafariResponse> {
+    Err(crate::Error::UnsupportedPlatformError)
+    // Ok(CloseSafariResponse {})
+  }
 }
 
 impl<R: Runtime> InAppBrowser<R> {

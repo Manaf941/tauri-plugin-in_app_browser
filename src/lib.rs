@@ -35,7 +35,11 @@ impl<R: Runtime, T: Manager<R>> crate::InAppBrowserExt<R> for T {
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
   Builder::new("in-app-browser")
-    .invoke_handler(tauri::generate_handler![commands::open_safari, commands::open_chrome])
+    .invoke_handler(tauri::generate_handler![
+      commands::open_safari,
+      commands::close_safari,
+      commands::open_chrome
+    ])
     .setup(|app, api| {
       #[cfg(mobile)]
       let in_app_browser = mobile::init(app, api)?;
