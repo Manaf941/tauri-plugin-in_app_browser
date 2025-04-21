@@ -16,7 +16,7 @@ pub struct OpenSafariRequest {
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OpenSafariResponse {
-  pub id: u32
+  pub id: i32
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -1,6 +1,8 @@
 <script>
-  import Greet from './lib/Greet.svelte'
-  import { open_safari, close_safari, open_chrome } from 'tauri-plugin-in-app-browser-api'
+    import Greet from './lib/Greet.svelte'
+    import { open_safari, init_in_app_browser, open_chrome, safari_events } from 'tauri-plugin-in-app-browser-api'
+
+    init_in_app_browser()
 
 	let response = ''
 
@@ -8,28 +10,35 @@
 		response += `[${new Date().toLocaleTimeString()}] ` + (typeof returnValue === 'string' ? returnValue : JSON.stringify(returnValue)) + '<br>'
 	}
 
-  async function open_safari_browser() {
-    const browser = await open_safari({
-      url: "https://google.com",
-    })
-      .catch(updateResponse)
-    
-    if (!browser) return
+    async function open_safari_browser() {
+        try {
+            const browser = await open_safari({
+                url: "https://google.com",
+                modalPresentationStyle: "pageSheet"
+            })
+            
+            if (!browser) return
+            updateResponse("Browser Launched with id " + browser.safari_id)
 
-    setTimeout(() => {
-      close_safari(browser)
+            browser.addEventListener("close", () => {
+                updateResponse("Browser Closed !")
+            })
+
+            setTimeout(() => {
+                browser.close()
+            }, 2000)
+        } catch(err) {
+            updateResponse(err)
+        }
+    }
+
+    function open_chrome_browser() {
+        open_chrome({
+        url: "https://google.com",
+        })
         .then(updateResponse)
         .catch(updateResponse)
-    }, 3000)
-  }
-
-  function open_chrome_browser() {
-    open_chrome({
-      url: "https://google.com",
-    })
-      .then(updateResponse)
-      .catch(updateResponse)
-  }
+    }
 </script>
 
 <main class="container">

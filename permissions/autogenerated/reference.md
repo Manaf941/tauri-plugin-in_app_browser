@@ -4,9 +4,7 @@ Default permissions for the plugin
 
 #### This default permission set includes the following:
 
-- `allow-open-safari`
-- `allow-close-safari`
-- `allow-open-chrome`
+- `allow-register-listener`
 
 ## Permission Table
 
@@ -91,6 +89,32 @@ Enables the open_safari command without any pre-configured scope.
 <td>
 
 Denies the open_safari command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`in-app-browser:allow-register-listener`
+
+</td>
+<td>
+
+Enables the register_listener command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`in-app-browser:deny-register-listener`
+
+</td>
+<td>
+
+Denies the register_listener command without any pre-configured scope.
 
 </td>
 </tr>

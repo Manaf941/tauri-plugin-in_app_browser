@@ -19,7 +19,7 @@ class CloseSafariArgs: Decodable {
     let id: Int
 }
 
-class SafariDelegate: NSObject, SFSafariViewControllerDelegate {
+class SafariDelegate: NSObject, SFSafariViewControllerDelegate, UIAdaptivePresentationControllerDelegate {
     weak var plugin: InAppBrowserPlugin?
     let safariId: Int
 
@@ -31,6 +31,11 @@ class SafariDelegate: NSObject, SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         plugin?.removeSafariController(for: safariId)
     }
+
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        plugin?.removeSafariController(for: safariId)
+    }
+
 }
 
 class InAppBrowserPlugin: Plugin {
@@ -40,6 +45,7 @@ class InAppBrowserPlugin: Plugin {
     // Helper to remove controller from map
     func removeSafariController(for id: Int) {
         safariControllers[id] = nil
+        trigger("safari_closed", data: ["id": id])
     }
 
     @objc public func open_safari(_ invoke: Invoke) throws {
@@ -112,6 +118,7 @@ class InAppBrowserPlugin: Plugin {
         let safariId = safariIdCounter
         let delegate = SafariDelegate(plugin: self, safariId: safariId)
         safariViewController.delegate = delegate
+        safariViewController.presentationController?.delegate = delegate
         safariControllers[safariId] = (controller: safariViewController, delegate: delegate)
 
         DispatchQueue.main.async {

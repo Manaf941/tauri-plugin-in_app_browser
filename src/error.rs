@@ -4,7 +4,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-  #[error("Unsupported platform for sign_in_with_apple")]
+  #[error("You tried to launch the wrong browser")]
   UnsupportedPlatformError,
   #[error(transparent)]
   Io(#[from] std::io::Error),

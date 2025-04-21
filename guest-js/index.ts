@@ -1,4 +1,25 @@
 import { invoke } from '@tauri-apps/api/core'
+import SafariBrowser from './SafariBrowser'
+import { addPluginListener } from './utils'
+
+export const PLUGIN_NAME = "in-app-browser"
+
+export interface SafariClosedEventPayload {
+    id: number,
+}
+
+export const safari_events = new EventTarget()
+export async function init_in_app_browser() {
+    await addPluginListener(
+        PLUGIN_NAME,
+        "safari_closed",
+        (payload: SafariClosedEventPayload) => {
+            safari_events.dispatchEvent(
+                new CustomEvent("safari_closed", { detail: payload })
+            )
+        }
+    )
+}
 
 export interface OpenSafariRequest {
     url: string,
@@ -13,10 +34,12 @@ export interface OpenSafariRequest {
 export interface OpenSafariResponse {
     id: number,
 }
-export async function open_safari(request: OpenSafariRequest): Promise<OpenSafariResponse> {
-    return await invoke<OpenSafariResponse>('plugin:in-app-browser|open_safari', {
+export async function open_safari(request: OpenSafariRequest): Promise<SafariBrowser> {
+    const response = await invoke<OpenSafariResponse>(`plugin:${PLUGIN_NAME}|open_safari`, {
         payload: request
     })
+
+    return new SafariBrowser(response.id)
 }
 
 export interface CloseSafariRequest {
@@ -24,7 +47,7 @@ export interface CloseSafariRequest {
 }
 export interface CloseSafariResponse {}
 export async function close_safari(request: CloseSafariRequest): Promise<CloseSafariResponse> {
-    return await invoke<CloseSafariResponse>('plugin:in-app-browser|close_safari', {
+    return await invoke<CloseSafariResponse>(`plugin:${PLUGIN_NAME}|close_safari`, {
         payload: request
     })
 }
@@ -36,7 +59,7 @@ export interface OpenChromeRequest {
 }
 
 export async function open_chrome(request: OpenChromeRequest): Promise<null> {
-    return await invoke<null>('plugin:in-app-browser|open_chrome', {
+    return await invoke<null>(`plugin:${PLUGIN_NAME}|open_chrome`, {
         payload: request
     })
 }

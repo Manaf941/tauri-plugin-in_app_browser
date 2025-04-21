@@ -1,8 +1,11 @@
 {
   "name": "tauri-plugin-in-app-browser-api",
   "version": "0.1.0",
-  "author": "You",
+  "author": "Manaf941",
   "description": "",
+  "repository": {
+    "url": "https://github.com/Manaf941/tauri-plugin-in_app_browser"
+  },
   "type": "module",
   "types": "./dist-js/index.d.ts",
   "main": "./dist-js/index.cjs",
