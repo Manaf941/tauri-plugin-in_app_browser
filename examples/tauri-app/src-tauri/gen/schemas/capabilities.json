@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"enables the default permissions","local":true,"windows":["main"],"permissions":["core:default","in-app-browser:default","in-app-browser:allow-open-safari","in-app-browser:allow-open-chrome"]}}
