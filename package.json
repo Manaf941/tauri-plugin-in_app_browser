@@ -1,8 +1,9 @@
 {
   "name": "tauri-plugin-in-app-browser-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Manaf941",
   "description": "",
+  "license": "MIT",
   "repository": {
     "url": "https://github.com/Manaf941/tauri-plugin-in_app_browser"
   },
